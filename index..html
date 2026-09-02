@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bossa Quest — Past & Skills</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand:#F3EEE1;
+    --sand-deep:#E9E1CC;
+    --ink:#1D3330;
+    --teal:#1F6F6B;
+    --teal-deep:#134F4C;
+    --aqua:#9FCBC6;
+    --gold:#E3A73D;
+    --coral:#D8654B;
+    --paper:#FFFDF8;
+    --radius:18px;
+    --shadow: 0 10px 30px rgba(19,79,76,0.10);
+  }
+  [data-theme="dark"]{
+    --sand:#132321; --sand-deep:#0d1a18; --ink:#EDE7D8; --paper:#17302c;
+    --teal:#7fc9c2; --teal-deep:#a9dcd6; --aqua:#2c4d49; --gold:#e3b968; --coral:#e08872;
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --sand:#132321; --sand-deep:#0d1a18; --ink:#EDE7D8; --paper:#17302c;
+      --teal:#7fc9c2; --teal-deep:#a9dcd6; --aqua:#2c4d49; --gold:#e3b968; --coral:#e08872;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 60px;
+    transition:background .3s ease;
+  }
+  .app{width:100%;max-width:760px;}
+
+  header.top{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(28px,5vw,38px);
+    margin:0;
+    line-height:1.05;
+    color:var(--teal-deep);
+  }
+  .brand p{
+    margin:4px 0 0;
+    font-size:14.5px;
+    color:var(--ink);
+    opacity:.72;
+  }
+  .waveline{
+    width:100%;
+    height:14px;
+    margin:14px 0 26px;
+    display:block;
+  }
+  .waveline path{stroke:var(--teal); stroke-width:3; fill:none; opacity:.55;}
+
+  .progress{display:flex; gap:10px; align-items:center;}
+  .progress .dot{
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size:14px;
+    background:var(--paper); color:var(--ink); opacity:.4;
+    border:2px solid var(--sand-deep);
+    transition:all .25s ease;
+  }
+  .progress .dot.active{opacity:1; border-color:var(--teal); color:var(--teal-deep); background:var(--paper); box-shadow:var(--shadow);}
+  .progress .dot.done{opacity:1; background:var(--teal); color:var(--paper); border-color:var(--teal);}
+
+  .card{
+    background:var(--paper);
+    border-radius:var(--radius);
+    padding:30px 28px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--sand-deep);
+  }
+
+  h2.title{
+    font-family:'Fraunces',serif;
+    font-size:24px;
+    font-weight:600;
+    margin:0 0 6px;
+    color:var(--teal-deep);
+  }
+  .sub{font-size:15px; opacity:.75; margin:0 0 22px; max-width:56ch; line-height:1.5;}
+
+  .story{
+    background:linear-gradient(180deg, var(--sand) 0%, transparent 100%);
+    border-left:3px solid var(--gold);
+    padding:14px 18px;
+    border-radius:10px;
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:24px;
+  }
+
+  .item{
+    padding:16px 0;
+    border-top:1px solid var(--sand-deep);
+  }
+  .item:first-of-type{border-top:none;}
+  .item p.sentence{margin:0 0 10px; font-size:16.5px; line-height:1.6;}
+  .blank{
+    display:inline-block;
+    min-width:88px;
+    padding:2px 6px;
+    border-bottom:2px dashed var(--gold);
+    font-weight:600;
+    color:var(--teal-deep);
+  }
+
+  .choices{display:flex; flex-wrap:wrap; gap:8px;}
+  button.choice{
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:999px;
+    border:2px solid var(--sand-deep);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    transition:transform .12s ease, border-color .15s ease, background .15s ease;
+  }
+  button.choice:hover{border-color:var(--teal); transform:translateY(-1px);}
+  button.choice.correct{background:var(--teal); border-color:var(--teal); color:#fff;}
+  button.choice.wrong{background:var(--coral); border-color:var(--coral); color:#fff;}
+  button.choice:disabled{cursor:default; transform:none;}
+
+  /* Phase 2 - ordering */
+  .pool{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; min-height:46px;}
+  .frag{
+    padding:10px 14px;
+    background:var(--sand);
+    border:2px solid var(--sand-deep);
+    border-radius:12px;
+    font-size:14.5px;
+    cursor:grab;
+    user-select:none;
+  }
+  .frag.placed{opacity:.35; cursor:default;}
+  .timeline{
+    display:flex; flex-direction:column; gap:8px;
+    margin-bottom:18px;
+  }
+  .slot{
+    min-height:46px;
+    border:2px dashed var(--sand-deep);
+    border-radius:12px;
+    display:flex; align-items:center; padding:0 14px;
+    font-size:14.5px;
+    color:var(--ink);
+    background:transparent;
+  }
+  .slot.filled{border-style:solid; border-color:var(--teal); background:var(--paper);}
+  .slot .n{font-family:'Fraunces',serif; font-weight:600; color:var(--gold); margin-right:10px;}
+
+  .actions{display:flex; gap:12px; margin-top:22px; flex-wrap:wrap;}
+  button.primary{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    padding:12px 24px;
+    border-radius:999px;
+    border:none;
+    background:var(--teal);
+    color:#fff;
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease;
+  }
+  button.primary:hover{background:var(--teal-deep); transform:translateY(-1px);}
+  button.primary:disabled{opacity:.4; cursor:not-allowed; transform:none;}
+  button.ghost{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    padding:11px 20px;
+    border-radius:999px;
+    border:2px solid var(--sand-deep);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  button.ghost:hover{border-color:var(--teal);}
+
+  .feedback{font-size:14px; margin-top:14px; min-height:20px; font-weight:600;}
+  .feedback.ok{color:var(--teal-deep);}
+  .feedback.no{color:var(--coral);}
+
+  .score-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13.5px; font-weight:700;
+    padding:6px 14px; border-radius:999px;
+    background:var(--sand); color:var(--teal-deep);
+  }
+
+  /* Certificate */
+  .cert-head{text-align:center; margin-bottom:20px;}
+  .cert-head .medal{font-size:44px; display:block; margin-bottom:6px;}
+  .cert-name-input{
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    text-align:center;
+    border:none;
+    border-bottom:2px solid var(--gold);
+    background:transparent;
+    color:var(--teal-deep);
+    padding:6px 4px;
+    width:100%;
+    margin:6px 0 20px;
+  }
+  .cert-name-input:focus{outline:none;}
+  table.cert-table{width:100%; border-collapse:collapse; margin-bottom:18px;}
+  table.cert-table td{padding:10px 8px; border-bottom:1px solid var(--sand-deep); font-size:14.5px;}
+  table.cert-table td.num{text-align:right; font-weight:700; color:var(--teal-deep); font-family:'Fraunces',serif;}
+  .tags{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 22px;}
+  .tag{
+    font-size:12.5px; font-weight:700;
+    padding:5px 12px; border-radius:999px;
+    background:var(--aqua); color:var(--teal-deep);
+  }
+  [data-theme="dark"] .tag, :root:not([data-theme="light"]) .tag{color:#0d1a18;}
+
+  footer.note{
+    text-align:center; font-size:12.5px; opacity:.55; margin-top:22px;
+  }
+
+  @media print{
+    body{background:#fff;}
+    header.top .progress, .actions, footer.note, .theme-toggle{display:none !important;}
+    .card{box-shadow:none; border:1px solid #ccc;}
+  }
+
+  .theme-toggle{
+    border:2px solid var(--sand-deep); background:var(--paper); color:var(--ink);
+    border-radius:999px; padding:7px 12px; font-size:13px; cursor:pointer; font-weight:600;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="brand">
+      <h1>Bossa Quest</h1>
+      <p>Past &amp; Skills — 3 fases para contar sua história em inglês</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">🌙 modo escuro</button>
+  </header>
+
+  <svg class="waveline" viewBox="0 0 400 14" preserveAspectRatio="none"><path d="M0 7 Q 20 0, 40 7 T 80 7 T 120 7 T 160 7 T 200 7 T 240 7 T 280 7 T 320 7 T 360 7 T 400 7"/></svg>
+
+  <div class="progress" id="progressDots">
+    <div class="dot active" data-p="0">🌅</div>
+    <div class="dot" data-p="1">1</div>
+    <div class="dot" data-p="2">2</div>
+    <div class="dot" data-p="3">3</div>
+    <div class="dot" data-p="4">🏆</div>
+  </div>
+  <div style="height:22px;"></div>
+
+  <div class="card" id="stage"></div>
+
+  <footer class="note">Baseado no conteúdo oficial da SEDUC-SP · 3º bimestre · 7º ano · Língua Inglesa</footer>
+</div>
+
+<script>
+/* ---------------- Estado ---------------- */
+const state = { phase: 0, score: {1:0,2:0,3:0}, total: {1:0,2:0,3:0}, evidence: new Set() };
+
+/* ---------------- Dados ---------------- */
+const phase1Items = [
+  { text:"Last month, I ___ with my sister to São Paulo and ___ a lot of fun.", answers:["traveled","had"], options:[["traveled","travel","travels"],["had","have","haves"]], tag:"simple past (traveled, had)" },
+  { text:"___, I visited my cousin's house and we ___ pizza at night.", options:[["Yesterday","Tomorrow","Now"],["ate","eat","eating"]], answers:["Yesterday","ate"], tag:"time marker + irregular verb (ate)" },
+  { text:"Two days ___, Maria ___ her family in Ecuador.", options:[["ago","before","last"],["visited","visit","visiting"]], answers:["ago","visited"], tag:"two days ago + visited" },
+  { text:"___ week, we ___ soccer and listened to music.", options:[["Last","Next","This"],["played","play","plays"]], answers:["Last","played"], tag:"last week + played" },
+  { text:"When Kelvin ___ sick, his mom ___ him to the hospital.", options:[["felt","feels","feeling"],["took","take","takes"]], answers:["felt","took"], tag:"irregular verbs (felt, took)" },
+];
+
+const phase2Fragments = [
+  { id:1, text:"First, I woke up early and had breakfast." },
+  { id:2, text:"Then, I packed my bag and left the house." },
+  { id:3, text:"After that, I met my friends at the bus stop." },
+  { id:4, text:"In the afternoon, we visited the museum downtown." },
+  { id:5, text:"Finally, at night, I told my family about the trip." },
+];
+
+const phase3Items = [
+  { text:"When Tom was younger, he ___ run fast, but now he ___ run as fast as before.", options:[["could","can"],["can","can't"]], answers:["could","can't"], tag:"could / can't" },
+  { text:"Anna ___ draw when she was a kid, but now she ___ draw very well.", options:[["couldn't","could"],["can","could"]], answers:["couldn't","can"], tag:"couldn't / can" },
+  { text:"I ___ swim when I was 5, but now I ___.", options:[["couldn't","could"],["can","couldn't"]], answers:["couldn't","can"], tag:"but now (contraste)" },
+  { text:"Luna ___ swim in the past, and today she ___ swim too — she loves the beach!", options:[["couldn't","could"],["can","can't"]], answers:["couldn't","can"], tag:"habilidade sustentada" },
+  { text:"Benjamin ___ play basketball as a child, but now he ___ play very well.", options:[["couldn't","could"],["can","can't"]], answers:["couldn't","can"], tag:"could/can — progresso" },
+];
+
+/* ---------------- Navegação ---------------- */
+function setProgress(p){
+  document.querySelectorAll('.dot').forEach(d=>{
+    const dp = parseInt(d.dataset.p);
+    d.classList.toggle('active', dp===p);
+    d.classList.toggle('done', dp<p);
+  });
+}
+
+function render(){
+  setProgress(state.phase);
+  const stage = document.getElementById('stage');
+  if(state.phase===0) stage.innerHTML = introScreen();
+  if(state.phase===1) stage.innerHTML = phaseScreen(1,"Fase 1 — Yesterday's Diary","Complete as lacunas com o simple past e os marcadores de tempo certos. Cada acerto vira uma linha do seu diário.", phase1Items, phase1Renderer);
+  if(state.phase===2) stage.innerHTML = phaseTwoScreen();
+  if(state.phase===3) stage.innerHTML = phaseScreen(3,"Fase 3 — Then &amp; Now","Compare quem você era com quem você é. Escolha can, can't, could ou couldn't.", phase3Items, phase3Renderer);
+  if(state.phase===4) stage.innerHTML = certScreen();
+  attachHandlers();
+}
+
+function introScreen(){
+  return `
+    <h2 class="title">Sua missão, se você aceitar 🌊</h2>
+    <p class="sub">Você vai narrar um dia especial usando tudo que aprendeu nas Aulas 1, 2, 3 e 5. São 3 fases curtas — cada uma exige uma estrutura diferente para avançar.</p>
+    <div class="story">
+      <strong>Fase 1</strong> — Simple Past + time markers<br>
+      <strong>Fase 2</strong> — Sequence words (organizar a história)<br>
+      <strong>Fase 3</strong> — Can / Could (então e agora)
+    </div>
+    <div class="actions">
+      <button class="primary" id="startBtn">Começar a missão</button>
+    </div>
+  `;
+}
+
+function phaseScreen(n, title, sub, items, renderer){
+  let html = `<h2 class="title">${title}</h2><p class="sub">${sub}</p>`;
+  items.forEach((item,i)=>{ html += renderer(item,i); });
+  html += `<div class="feedback" id="fb"></div>
+    <div class="actions">
+      <span class="score-pill" id="scorePill">0 / ${items.length}</span>
+      <button class="primary" id="nextBtn" disabled>Avançar</button>
+    </div>`;
+  return html;
+}
+
+function blanksInSentence(text, options){
+  let i=0;
+  return text.replace(/___/g, () => `<span class="blank" data-slot="${i++}">?</span>`);
+}
+
+function phase1Renderer(item,i){
+  let html = `<div class="item" data-index="${i}"><p class="sentence">${blanksInSentence(item.text)}</p>`;
+  item.options.forEach((opts,slot)=>{
+    html += `<div class="choices" data-slot="${slot}">`;
+    opts.forEach(o=>{ html += `<button class="choice" data-value="${o}" data-slot="${slot}" data-item="${i}">${o}</button>`; });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+function phase3Renderer(item,i){ return phase1Renderer(item,i); }
+
+let itemAnswers1 = {}, itemAnswers3 = {};
+
+function phaseTwoScreen(){
+  const shuffled = [...phase2Fragments].sort(()=>Math.random()-0.5);
+  let pool = shuffled.map(f=>`<div class="frag" draggable="true" data-id="${f.id}">${f.text}</div>`).join('');
+  let slots = phase2Fragments.map((_,i)=>`<div class="slot" data-slot="${i}"><span class="n">${i+1}.</span><span class="content"></span></div>`).join('');
+  return `
+    <h2 class="title">Fase 2 — Put It in Order</h2>
+    <p class="sub">Arraste (ou toque, em ordem) os trechos até a linha do tempo, usando as sequence words como pista: first, then, after that, in the afternoon, finally.</p>
+    <div class="pool" id="pool">${pool}</div>
+    <div class="timeline" id="timeline">${slots}</div>
+    <div class="feedback" id="fb"></div>
+    <div class="actions">
+      <button class="ghost" id="checkOrderBtn">Verificar ordem</button>
+      <button class="primary" id="nextBtn" disabled>Avançar</button>
+    </div>
+  `;
+}
+
+/* ---------------- Handlers ---------------- */
+function attachHandlers(){
+  const startBtn = document.getElementById('startBtn');
+  if(startBtn) startBtn.onclick = () => { state.phase=1; render(); };
+
+  const nextBtn = document.getElementById('nextBtn');
+  if(nextBtn) nextBtn.onclick = () => { state.phase++; render(); };
+
+  document.querySelectorAll('button.choice').forEach(btn=>{
+    btn.onclick = () => handleChoice(btn);
+  });
+
+  const checkOrderBtn = document.getElementById('checkOrderBtn');
+  if(checkOrderBtn) checkOrderBtn.onclick = checkOrder;
+
+  if(state.phase===2) setupDragDrop();
+
+  const themeToggle = document.getElementById('themeToggle');
+  if(themeToggle) themeToggle.onclick = toggleTheme;
+
+  if(state.phase===4) setupCert();
+}
+
+function currentPhaseKey(){ return state.phase; }
+
+function handleChoice(btn){
+  const item = btn.dataset.item;
+  const slot = btn.dataset.slot;
+  const group = document.querySelector(`.choices[data-slot="${slot}"]`);
+  if(!group || group.parentElement.dataset.index !== item) return;
+  const container = document.querySelector(`.item[data-index="${item}"]`);
+  if(container.dataset.locked) return;
+
+  const store = state.phase===1 ? itemAnswers1 : itemAnswers3;
+  store[item] = store[item] || {};
+  store[item][slot] = btn.dataset.value;
+
+  container.querySelectorAll(`.choices[data-slot="${slot}"] .choice`).forEach(b=>b.disabled=true);
+  btn.classList.add('picked-temp');
+
+  const dataArr = state.phase===1 ? phase1Items : phase3Items;
+  const answers = dataArr[item].answers;
+  const isCorrect = answers[slot] === btn.dataset.value;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const blank = container.querySelectorAll('.blank')[slot];
+  if(blank) blank.textContent = btn.dataset.value;
+
+  const totalSlots = dataArr[item].options.length;
+  const answeredSlots = Object.keys(store[item]).length;
+  if(answeredSlots === totalSlots){
+    container.dataset.locked = "1";
+    const allCorrect = answers.every((a,idx)=> store[item][idx]===a);
+    state.total[state.phase]++;
+    if(allCorrect){
+      state.score[state.phase]++;
+      state.evidence.add(dataArr[item].tag);
+    }
+    updateScorePill();
+    checkPhaseComplete(dataArr.length);
+  }
+}
+
+function updateScorePill(){
+  const pill = document.getElementById('scorePill');
+  if(pill) pill.textContent = `${state.score[state.phase]} / ${state.total[state.phase]}`;
+}
+
+function checkPhaseComplete(totalItems){
+  const lockedCount = document.querySelectorAll('.item[data-locked]').length;
+  if(lockedCount >= totalItems){
+    const fb = document.getElementById('fb');
+    const nb = document.getElementById('nextBtn');
+    fb.textContent = `Fase concluída! Você acertou ${state.score[state.phase]} de ${totalItems}.`;
+    fb.className = 'feedback ok';
+    if(nb) nb.disabled = false;
+  }
+}
+
+/* ---- Phase 2 drag & drop (+ tap fallback for mobile) ---- */
+let dragId = null;
+let selectedFrag = null;
+
+function setupDragDrop(){
+  const frags = document.querySelectorAll('.frag');
+  const slots = document.querySelectorAll('.slot');
+
+  frags.forEach(f=>{
+    f.addEventListener('dragstart', e=>{ dragId=f.dataset.id; });
+    f.addEventListener('click', ()=>{
+      if(f.classList.contains('placed')) return;
+      document.querySelectorAll('.frag').forEach(x=>x.style.outline='');
+      selectedFrag = f.dataset.id;
+      f.style.outline = '3px solid var(--teal)';
+    });
+  });
+
+  slots.forEach(s=>{
+    s.addEventListener('dragover', e=> e.preventDefault());
+    s.addEventListener('drop', e=>{
+      e.preventDefault();
+      placeFragment(dragId, s);
+    });
+    s.addEventListener('click', ()=>{
+      if(selectedFrag){ placeFragment(selectedFrag, s); selectedFrag=null; }
+    });
+  });
+}
+
+function placeFragment(id, slotEl){
+  if(!id) return;
+  if(slotEl.classList.contains('filled')) return;
+  const frag = document.querySelector(`.frag[data-id="${id}"]`);
+  if(!frag || frag.classList.contains('placed')) return;
+  const item = phase2Fragments.find(f=>f.id==id);
+  slotEl.querySelector('.content').textContent = item.text;
+  slotEl.classList.add('filled');
+  slotEl.dataset.filledId = id;
+  frag.classList.add('placed');
+  frag.setAttribute('draggable','false');
+}
+
+function checkOrder(){
+  const slots = document.querySelectorAll('.slot');
+  let correct = 0;
+  slots.forEach((s,i)=>{
+    const expected = phase2Fragments[i].id;
+    if(parseInt(s.dataset.filledId) === expected){
+      correct++;
+      s.style.borderColor = 'var(--teal)';
+    } else if(s.dataset.filledId){
+      s.style.borderColor = 'var(--coral)';
+    }
+  });
+  const fb = document.getElementById('fb');
+  state.total[2] = 5;
+  state.score[2] = correct;
+  if(correct === 5){
+    fb.textContent = "Perfeito! A história está na ordem certa — sequence words dominadas.";
+    fb.className='feedback ok';
+    state.evidence.add("sequence words (first, then, after that, in the afternoon, finally)");
+    document.getElementById('nextBtn').disabled = false;
+  } else {
+    fb.textContent = `${correct} de 5 no lugar certo. Reorganize e verifique de novo.`;
+    fb.className='feedback no';
+  }
+}
+
+/* ---------------- Certificado ---------------- */
+function certScreen(){
+  const totalScore = state.score[1] + state.score[2] + state.score[3];
+  const totalMax = phase1Items.length + 5 + phase3Items.length;
+  return `
+    <div class="cert-head">
+      <span class="medal">🏆</span>
+      <h2 class="title" style="text-align:center;">Certificado de Evidência de Aprendizagem</h2>
+    </div>
+    <input class="cert-name-input" id="studentName" placeholder="Nome do estudante" />
+    <table class="cert-table">
+      <tr><td>Fase 1 — Yesterday's Diary (Simple Past + time markers)</td><td class="num">${state.score[1]} / ${phase1Items.length}</td></tr>
+      <tr><td>Fase 2 — Put It in Order (Sequence words)</td><td class="num">${state.score[2]} / 5</td></tr>
+      <tr><td>Fase 3 — Then &amp; Now (Can / Could)</td><td class="num">${state.score[3]} / ${phase3Items.length}</td></tr>
+      <tr><td><strong>Total</strong></td><td class="num">${totalScore} / ${totalMax}</td></tr>
+    </table>
+    <p class="sub" style="margin-bottom:6px;">Estruturas demonstradas nesta sessão:</p>
+    <div class="tags">${[...state.evidence].map(t=>`<span class="tag">${t}</span>`).join('') || '<span class="tag">nenhuma ainda — jogue as fases!</span>'}</div>
+    <div class="actions">
+      <button class="ghost" id="printBtn">Imprimir / salvar PDF</button>
+      <button class="primary" id="restartBtn">Jogar novamente</button>
+    </div>
+  `;
+}
+function setupCert(){
+  const printBtn = document.getElementById('printBtn');
+  if(printBtn) printBtn.onclick = ()=> window.print();
+  const restartBtn = document.getElementById('restartBtn');
+  if(restartBtn) restartBtn.onclick = ()=>{
+    state.phase=0; state.score={1:0,2:0,3:0}; state.total={1:0,2:0,3:0}; state.evidence=new Set();
+    itemAnswers1={}; itemAnswers3={};
+    render();
+  };
+}
+
+/* ---------------- Tema ---------------- */
+function toggleTheme(){
+  const root = document.documentElement;
+  const cur = root.getAttribute('data-theme');
+  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let next;
+  if(!cur) next = dark ? 'light' : 'dark';
+  else next = cur === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  document.getElementById('themeToggle').textContent = next==='dark' ? '☀️ modo claro' : '🌙 modo escuro';
+}
+
+render();
+</script>
+</body>
+</html>
